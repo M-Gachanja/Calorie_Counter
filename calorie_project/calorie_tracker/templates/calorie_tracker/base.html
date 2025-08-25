@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calorie Counter</title>
+    <link rel="stylesheet" href="{% static 'calorie_tracker/css/styles.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="{% url 'calorie_tracker:dashboard' %}" class="logo">Home</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

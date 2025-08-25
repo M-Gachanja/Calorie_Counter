@@ -1,0 +1,72 @@
+{% extends "calorie_tracker/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1 class="dashboard-title">Today's Calories: {{ today|date:"F j, Y" }}</h1>
+    
+    <!-- Total Calories Card -->
+    <div class="calorie-card">
+        <h2 class="card-title">Total Calories</h2>
+        <p class="calorie-count {% if total_calories > 2000 %}over-limit{% else %}under-limit{% endif %}">
+            {{ total_calories }}
+        </p>
+    </div>
+    
+    <!-- Add Food Form -->
+    <div class="form-card">
+        <h2 class="card-title">Add Food Item</h2>
+        <form method="post" class="food-form">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.name.label_tag }}
+                {{ form.name }}
+            </div>
+            <div class="form-group">
+                {{ form.calories.label_tag }}
+                {{ form.calories }}
+            </div>
+            <button type="submit" class="submit-btn">
+                Add Food
+            </button>
+        </form>
+    </div>
+    
+    <!-- Food Items List -->
+    <div class="food-list-card">
+        <h2 class="card-title">Today's Food Items</h2>
+        {% if food_items %}
+            <ul class="food-items">
+                {% for item in food_items %}
+                    <li class="food-item">
+                        <div class="food-info">
+                            <span class="food-name">{{ item.name }}</span>
+                            <span class="food-calories">{{ item.calories }} cal</span>
+                        </div>
+                        <form method="post" action="{% url 'calorie_tracker:delete_food_item' item.pk %}" class="delete-form">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-btn">
+                                Delete
+                            </button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-message">No food items added today.</p>
+        {% endif %}
+        
+        <!-- Reset Button -->
+        {% if food_items %}
+            <div class="reset-container">
+                <form method="post" action="{% url 'calorie_tracker:reset_day' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="reset-btn">
+                        Reset Day
+                    </button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
